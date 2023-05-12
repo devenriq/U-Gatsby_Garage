@@ -1,7 +1,10 @@
 //Esto permite el uso de path para referenciar localizaciones en el proyecto
 const path = require("path");
 //Esto permite el uso de una herramienta que genera ids automáticamente
-const { assignIds } = require("@webdeveducation/wp-block-tools");
+const {
+  assignIds,
+  assignGatsbyImage,
+} = require("@webdeveducation/wp-block-tools");
 //Permite el acceso a archivos del sistema
 const fs = require("fs");
 
@@ -33,6 +36,12 @@ exports.createPages = async ({ actions, graphql }) => {
     const page = data.allWpPage.nodes[i];
     let blocks = page.blocks;
     blocks = assignIds(blocks);
+    blocks = await assignGatsbyImage({
+      blocks,
+      graphql,
+      coreMediaText: true,
+    });
+
     createPage({
       path: page.uri,
       component: pageTemplate,
